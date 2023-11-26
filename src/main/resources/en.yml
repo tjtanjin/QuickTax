@@ -1,0 +1,135 @@
+# plugin prefix
+prefix: '&6[&bQuickTax&6] '
+
+# messages that support placeholders have them listed as comments on the right of the message
+
+# general messages
+reload-success: '&aQuickTax has been reloaded!'
+reload-fail: '&cFailed to load config/message files. Check for error/missing fields in them or contact the author if you believe this to be an error.'
+invalid-command: '&cInvalid command, type &6/quicktax help&c!'
+invalid-syntax: '&cInvalid syntax, type &6/quicktax help&c!'
+invalid-schedule: '&cAn invalid schedule was found, please check your schedule file!'
+no-permission: '&cYou do not have the permission to run this command!'
+storage-disabled: '&cA valid storage type must be set in config for this feature to work!'
+player-not-exist: '&cThe player name you entered does not exist!' # %player%
+player-load-in-progress: '&cLoading player data, please try again later.'
+
+# tax payment/withdrawal messages
+tax-collect-individual-in-progress: '&aStarting tax collection from %player%' # %player%
+tax-collect-all-in-progress: '&aStarting tax collection from all players...'
+tax-collect-rank-in-progress: '&aStarting tax collection from players based on rank...'
+tax-collect-bal-in-progress: '&aStarting tax collection from players based on balance...'
+tax-collect-success-individual: '&aTax collected from &b%player%&a!' # %player%
+tax-collect-success-all: '&aTaxes collected for all players!'
+tax-collect-success-rank: '&aTaxes collected for players by rank!'
+tax-collect-success-bal: '&aTaxes collected for players by balance!'
+tax-withdraw-success: '&aBalance withdrawn successfully!'
+tax-withdraw-fail: '&cThere is insufficient server tax balance!'
+tax-collect-fail-individual: '&b%player% &chas no money to pay tax!' # %player%
+tax-collect-already-running: '&cAn existing tax collection is ongoing, please try again later!'
+player-pay-tax-fail: '&cYou have insufficient balance to pay tax!' # %player%
+player-pay-tax-success: '&aTax was collected from you and you have paid $%amount%!' # %player%, %amount%
+player-receive-tax-money: '&aYou received $%amount% from the server tax balance!' # %amount%
+
+# scheduling messages
+schedule-disabled: '&cThis command requires schedule to be enabled in its config!'
+schedule-not-found: '&cThere are no tax collection schedules to run!'
+schedule-run: '&aTax collection schedule now loaded and running!'
+schedule-stop: '&cTax collection schedule has been stopped!'
+schedule-already-running: '&cTax collection schedule is already running!'
+schedule-not-running: '&cTax collection is not running!'
+schedule-not-exist: '&cThe schedule you entered does not exist!' # %schedule%
+
+# leaderboard messages
+update-started: '&aStarted tax payer leaderboard update.'
+update-in-progress: '&cUpdate is currently in progress, please try again later.'
+update-complete: '&aThe leaderboard update is complete!'
+no-updated-leaderboard: '&cThere is no updated leaderboard yet!'
+quicktax-sign-placed: '&aLeaderboard sign for rank %rank% has been placed!' #%rank%
+quicktax-sign-broken: '&aLeaderboard sign for rank %rank% has been broken!' #%rank%
+no-quicktax-sign-add-permission: '&cYou do not have permission to create a leaderboard sign!'
+no-quicktax-sign-remove-permission: '&cYou do not have permission to break a leaderboard sign!'
+
+# format for help command
+help-header: '&b----- &6Commands &b-----'
+help-body: |
+  &a/quicktax help &b- view a list of help options
+  &a/quicktax pay <amount> &b- pay tax to the server
+  &a/quicktax top &b- view tax payer leaderboard
+  &a/quicktax stats &b- view your own tax stats
+  &a/quicktax stats <name> &b- view a specific player's tax stats
+  &a/quicktax collectall &b- tax all players
+  &a/quicktax collectrank &b- tax players based on rank
+  &a/quicktax collectbal &b- tax players based on balance
+  &a/quicktax collectname <name> <amount> &b- tax a specific player
+  &a/quicktax server stats &b- view the server total tax stats
+  &a/quicktax server withdraw <amount> &b- withdraw money to self from server tax balance
+  &a/quicktax server withdraw <amount> <name> &b- withdraw money to player from server tax balance
+  &a/quicktax schedule start &b- start tax collection schedule
+  &a/quicktax schedule stop &b- stop tax collection schedule
+  &a/quicktax schedule view &b- view all schedules
+  &a/quicktax schedule view <name> &b- view a specific schedule
+  &a/quicktax update &b- manually trigger an update for the leaderboard
+  &a/quicktax reload &b- reloads the plugin
+help-footer: '&6Type &e/quicktax help %page% &6to view next page' # %page% is the next page number
+
+# format for showing playerstats
+# supports the following placeholders:
+  # %player%
+  # %latesttaxpaid%
+  # %totaltaxpaid%
+player-stats: |
+  &b----- &6%player% Stats &b-----
+  &aLatest Tax Paid: &b%latesttaxpaid%
+  &aTotal Tax Paid: &b%totaltaxpaid%
+
+# format for showing serverstats
+# supports the following placeholders:
+  # %totaltaxcollected%
+  # %totaltaxbalance%
+server-stats: |
+  &b----- &6Server Stats &b-----
+  &aTotal Tax Collected: &b%totaltaxcollected%
+  &aTotal Tax Balance: &b%totaltaxbalance%
+
+# format for showing schedules
+# supports the following placeholders:
+  # %schedulename%
+  # %enabled%
+  # %fixedstarttime%
+  # %timezone%
+  # %hour%
+  # %minute%
+  # %second%
+  # %frequency%
+  # %type%
+  # %nextruntime%
+schedule-view: |
+  &b----- &6%schedulename% &b-----
+  &aEnabled: &b%enabled%
+  &aFixed Start Time: &b%fixedstarttime%
+  &aTimezone: &b%timezone%
+  &aStart Time: &b%hour%h %minute%m %second%s
+  &aFrequency: &b%frequency%s
+  &aType: &b%type%
+  &aNext Run: &b%nextruntime%
+
+# format for leaderboard sign message (line 1 and 2 are fixed, only line 3 and 4 are customizable)
+# supports the following placeholders:
+# %player%
+# %totaltaxpaid%
+leaderboard-sign: |
+  &a&l%player%
+  &c&l%totaltaxpaid%
+
+# format for leaderboard
+leaderboard-header: |
+  &b----- &6Tax Payer Leaderboard &b-----
+
+# %num% is rank position, %player% is player name and %totaltaxpaid% is player total tax paid
+leaderboard-body: |
+  &a%num% &b%player%: &e%totaltaxpaid%
+
+# %page% is the next page number
+leaderboard-footer: |
+  &6Type &e/qt top %page% &6to view next page

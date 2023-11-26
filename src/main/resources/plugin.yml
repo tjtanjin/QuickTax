@@ -1,0 +1,13 @@
+name: QuickTax
+version: ${project.version}
+main: tk.taverncraft.quicktax.Main
+author: tjtanjin - FrozenFever
+website: https://www.spigotmc.org/threads/quicktax.527519/
+depend: [Vault]
+softdepend: [GriefPrevention, LuckPerms, PlaceholderAPI]
+description: A simple and quick tax management system
+api-version: 1.13
+commands:
+  quicktax:
+    description: Base command for the plugin
+    aliases: [qt, qtax]

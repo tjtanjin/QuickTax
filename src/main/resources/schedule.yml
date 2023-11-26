@@ -1,0 +1,132 @@
+#####################################################################################
+#                                                                                   #
+#                               Global Configuration                                #
+#                                                                                   #
+#####################################################################################
+
+# this is a global enable/disable option for all schedules (and is of the highest priority)
+# if this is false, none of the schedules will run even if they are enabled in their own sections
+enabled: false
+
+# if true and there are schedules enabled, they will automatically run on server start or plugin reload
+# otherwise it will only start with the schedule start command
+autostart: false
+
+################################## VERY IMPORTANT NOTES ########################################################
+# users unsure of the schedule config are advised to try this on a test server before actual use
+# catastrophic damage can be done to the server economy if you accidentally set tax collections to be done every second!
+# read through the entire schedule config carefully before use, including the examples!
+
+# you should always enable and start a collection task within a 24-hour window of your intended first run because
+# specifying the start date/month for the first run of a collection is not supported
+# in other words, DO NOT enable and run the schedule more than 24 hours before your intended start year/month/date/time
+
+# to those who wonder why date/month is not supported, it adds a lot more confusion for players who may treat it
+# as a repeating month/date - should you still be confused on how to schedule long term tasks, please contact me on
+# discord at: FrozenFever#8284
+
+# a full wiki will be written to better explain all these in the near future
+################################################################################################################
+
+#####################################################################################
+#                                                                                   #
+#                              Schedule Configuration                               #
+#                                                                                   #
+#####################################################################################
+
+# the section below is to be used for scheduling repeated tax collections (3 examples have been provided)
+# you may use other unique names for your own schedules
+schedules:
+  # example1 shows how to repeat a tax collection from all players daily at 12 midnight from GMT+8 timezone
+  example1:
+    # whether to use this schedule - note that if schedules are globally disabled this value will be ignored
+    enabled: false
+
+    # whether to start repeating the task from a fixed time
+    # if true, will begin running the task the next time the clock reaches the timestamp configured below
+
+    # if false, the repeating task will start count from every plugin load/server start
+    # note that false is not recommended in most situations (better to specify exact timings for easier management)
+    startFromFixedTime: true
+    # timings below (24-hour format) are ignored if startFromFixedTime is set to false
+    # a list of supported timezone is provided at the end of the config
+    timezone: "GMT+8" # indicates timezone being used
+    hour: 0 # 12am
+    minute: 0 # 0 minute
+    second: 0 # 0 second
+
+    # interval between collecting tax (in seconds)
+    frequency: 86400 # everyday
+
+    # which tax command to run (collectall, collectrank or collectbal)
+    type: collectall
+
+    # whether to update the leaderboard after scheduled collection run (storage-type cannot be none for this to work)
+    update-leaderboard-on-run: false
+
+    # commands to run after scheduled collection is complete (e.g. broadcast, reward players)
+    # papi placeholders may also be used here (e.g. %qtax_top_name_1%, %qtax_top_tax_1%)
+    commands:
+      - broadcast &aTax Collection Completed!
+      - broadcast &b%qtax_top_name_1% &apaid the most tax at &e%qtax_top_tax_1%&a!
+
+  # example2 shows how to collect tax based on rank at 1 hour intervals from the time the plugin is loaded
+  example2:
+    enabled: false
+    startFromFixedTime: false
+    timezone: "GMT+8" # does not matter for this example since startFromFixedTime is false
+    hour: 0 # does not matter for this example since startFromFixedTime is false
+    minute: 0 # does not matter for this example since startFromFixedTime is false
+    second: 0 # does not matter for this example since startFromFixedTime is false
+
+
+    frequency: 3600 # every 1 hour
+    type: collectrank
+    update-leaderboard-on-run: false
+    commands:
+      - broadcast &aTax Collection Completed!
+
+  # example3 shows how to collect tax based on balance at weekly intervals at 3pm (GMT+4)
+  example3:
+    enabled: false
+    startFromFixedTime: false
+    timezone: "GMT+4"
+    day:
+    hour: 15 # 3pm
+    minute: 0 # 0 minute
+    second: 0 # 0 second
+
+
+    frequency: 604800 # every week
+    type: collectbal
+    update-leaderboard-on-run: false
+    commands:
+      - broadcast &aTax Collection Completed!
+
+# supported timezones
+
+#  GMT-12
+#  GMT-11
+#  GMT-10
+#  GMT-9
+#  GMT-8
+#  GMT-7
+#  GMT-6
+#  GMT-5
+#  GMT-4
+#  GMT-3
+#  GMT-2
+#  GMT-1
+#  GMT+0
+#  GMT+1
+#  GMT+2
+#  GMT+3
+#  GMT+4
+#  GMT+5
+#  GMT+6
+#  GMT+7
+#  GMT+8
+#  GMT+9
+#  GMT+10
+#  GMT+11
+#  GMT+12

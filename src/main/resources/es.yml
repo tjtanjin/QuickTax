@@ -1,0 +1,135 @@
+# plugin prefix
+prefix: '&6[&bQuickTax&6] '
+
+# los mensajes que soportan placeholders están listados a la derecha del mensaje
+
+# mensajes generales
+reload-success: '&aQuickTax ha sido recargado!'
+reload-fail: '&cError al cargar los archivos config/message. Comprueba que no haya errores ni campos incompletos en la configuración o contacta con el autor si crees que esto es un fallo.'
+invalid-command: '&cComando Inválido, escribe &6/quicktax help&c!'
+invalid-syntax: '&cSintaxis Inválida, escribe &6/quicktax help&c!'
+invalid-schedule: '&cHorario Programado no encontrado! Revisa los archivos de schedules.yml'
+no-permission: '&cNo tienes permiso para ejecutar este comando!'
+storage-disabled: '&cEl almacenamiento debe estar habilitado para que este comando funcione!'
+player-not-exist: '&cEl nombre del jugador que has escrito no existe!' # %player%
+player-load-in-progress: '&cCargando datos del jugador, inténtelo de nuevo más tarde.'
+
+# mensajes de pago/retirada/recaudacion de impuestos
+tax-collect-individual-in-progress: '&aComenzando la Recaudación de Impuestos del jugador: %player%' # %player%
+tax-collect-all-in-progress: '&aComenzando la recaudación de Impuestos de todos los jugadores...'
+tax-collect-rank-in-progress: '&aComenzando la recaudación de Impuestos de todos los jugadores basados en su rango...'
+tax-collect-bal-in-progress: '&aComenzando la recaudación de Impuestos de todos los jugadores basados en su dinero...'
+tax-collect-success-individual: '&aImpuestos Recaudados del jugador: &b%player%&a!' # %player%
+tax-collect-success-all: '&a¡Impuestos Recaudados de todos los jugadores!'
+tax-collect-success-rank: '&a¡Impuestos Recaudados de todos los jugadores por rango!'
+tax-collect-success-bal: '¡Impuestos Recaudados de todos los jugadores por dinero!'
+tax-withdraw-success: '&aFondos retirados de la cuenta del Servidor!'
+tax-withdraw-fail: '&cFondos insuficientes. La cuenta del Servidor no tiene ese saldo de impuestos para retirar!'
+tax-collect-fail-individual: '&b%player% &cno tiene dinero para pagar sus impuestos!' # %player%
+tax-collect-already-running: '&cHay una recaudación de impuestos en curso. Vuelva a intentarlo más tarde!'
+player-pay-tax-fail: '&cTienes dinero insuficiente para pagar tus impuestos!' # %player%
+player-pay-tax-success: '&aLos impuestos han sido recaudados de tu cuenta bancaria personal y tu has pagado una cantidad de: $%amount%' # %player%, %amount%
+player-receive-tax-money: '&aHas recibido $%amount% de la cuenta bancaria de impuestos del servidor!' # %amount%
+
+# mensajes de horarios programables
+schedule-disabled: '&cEste comando requiere un horario programable que tiene que ser activado en el archivo schedules.yml'
+schedule-not-found: '&cNo hay ningún horario programado para la recaudación de impuestos!'
+schedule-run: '&a¡Horario para la Recaudación de Impuestos está cargado y funcionando!'
+schedule-stop: '&c¡Horario para la Recaudación de Impuestos ha sido apagado!'
+schedule-already-running: '&cEl horario programado para la recaudación de impuestos &aYA&c está funcionando!'
+schedule-not-running: '&cEl horario programado para la recaudación de impuestos &4NO&c está funcionando!'
+schedule-not-exist: '&cEl horario que ingresó no existe!' # %schedule%
+
+# leaderboard messages
+update-started: '&aActualización de la tabla de clasificación de contribuyentes iniciada.'
+update-in-progress: '&cLa actualización está en curso. Vuelve a intentarlo más tarde.'
+update-complete: '&a¡La actualización de la tabla de clasificación está completa!'
+no-updated-leaderboard: '&c¡No hay una tabla de clasificación actualizada!'
+quicktax-sign-placed: '&a¡Has colocado el letrero de la tabla de clasificación para el rango %rank%!' #%rank%
+quicktax-sign-broken: '&a¡Has roto el letrero de la tabla de clasificación para el rango %rank%!' #%rank%
+no-quicktax-sign-add-permission: '&c¡No tienes permiso para crear un letrero en la tabla de clasificación!'
+no-quicktax-sign-remove-permission: '&c¡No tienes permiso para romper una señal de clasificación!'
+
+# formato del comando help
+help-header: '&b----- &6Comandos &b-----'
+help-body: |
+  &a/quicktax help &b- Ver toda la lista de comandos.
+  &a/quicktax pay <cantidad> &b- Pagar impuestos al servidor.
+  &a/quicktax top &b- ver la clasificación de contribuyentes
+  &a/quicktax stats &b- Ver tus estadísticas de impuestos.
+  &a/quicktax stats <nombre> &b- Ver estadísticas de impuestos de un jugador.
+  &a/quicktax collectall &b- Recaudar impuestos a todos los jugadores.
+  &a/quicktax collectrank &b- Recaudar impuestos a los jugadores basados en su rango.
+  &a/quicktax collectbal &b- Recaudar impuestos a los jugadores basados en su dinero.
+  &a/quicktax collectname <nombre> <cantidad> &b- Recaudar impuestos a un jugador específico.
+  &a/quicktax server stats &b- Ver estadísticas de impuestos totales del servidor.
+  &a/quicktax server withdraw <cantidad> &b- Retirar dinero de la cuenta de impuestos del servidor a uno mismo.
+  &a/quicktax server withdraw <cantidad> <nombre> &b- Retirar dinero de la cuenta de impuestos del servidor a un jugador.
+  &a/quicktax schedule start &b- Comenzar la recaudación de impuestos en el horario programado.
+  &a/quicktax schedule stop &b- Parar la recaudación de impuestos en el horario programado.
+  &a/quicktax schedule view &b- ver todos los horarios
+  &a/quicktax schedule view <name> &b- ver un horario específico
+  &a/quicktax update &b- activar manualmente una actualización para la tabla de clasificación
+  &a/quicktax reload &b- Recargar el plugin.
+help-footer: '&6Escriba &e/quicktax help %page% &6para ver la página siguiente' # %page% es el número de la página siguiente
+
+# formato para mostrar las estadísticas de jugador
+# supports the following placeholders:
+  # %player%
+  # %latesttaxpaid%
+  # %totaltaxpaid%
+player-stats: |
+  &b----- &6Estadísticas de %player% &b-----
+  &aÚltimo Impuesto Pagado: &b%latesttaxpaid%
+  &aTotal Impuestos Pagados: &b%totaltaxpaid%
+
+# formato para mostrar las estadísticas del servidor
+# supports the following placeholders:
+  # %totaltaxcollected%
+  # %totaltaxbalance%
+server-stats: |
+  &b----- &6Estadísticas del Servidor &b-----
+  &aImpuestos Totales Recaudados: &b%totaltaxcollected%
+  &aDinero Total de Impuestos: &b%totaltaxbalance%
+
+# formato para mostrar los horarios programados
+# soporta los siguientes placeholders:
+  # %schedulename%
+  # %enabled%
+  # %fixedstarttime%
+  # %timezone%
+  # %hour%
+  # %minute%
+  # %second%
+  # %frequency%
+  # %type%
+  # %nextruntime%
+schedule-view: |
+  &b----- &6%schedulename% &b-----
+  &aActivo: &b%enabled%
+  &aHora de Inicio Fijo: &b%fixedstarttime%
+  &aZona Horaria: &b%timezone%
+  &aHora de Inicio: &b%hour%h %minute%m %second%s
+  &aFrecuencia: &b%frequency%s
+  &aTipo: &b%type%
+  &apróxima ejecución: &b%nextruntime%
+
+# formato para el mensaje de letrero de la tabla de clasificación (las líneas 1 y 2 son fijas, solo las líneas 3 y 4 son personalizables)
+# soporta los siguientes placeholders:
+# %player%
+# %totaltaxpaid%
+leaderboard-sign: |
+  &a&l%player%
+  &c&l%totaltaxpaid%
+
+# formato para la tabla de clasificación
+leaderboard-header: |
+  &b----- &6Tax Payer Leaderboard &b-----
+
+# %num% es la posición de rango, %player% es el nombre del jugador y %totaltaxpaid% es el total de impuestos pagados por el jugador
+leaderboard-body: |
+  &a%num% &b%player%: &e%totaltaxpaid%
+
+# %page% es el número de página siguiente
+leaderboard-footer: |
+  &6Type &e/qt top %page% &6to view next page

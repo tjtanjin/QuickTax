@@ -1,0 +1,139 @@
+#####################################################################################
+#                                                                                   #
+#                        General Configurations (Do not skip)                       #
+#                                                                                   #
+#####################################################################################
+
+# whether to write updated player data to file/mysql or not at all
+# options here include: MySQL, YAML and None
+# The use of storage allows monitoring of taxes paid by players which is required for the following functions:
+#   - checking player and server stats
+#   - leaderboard (/qt top, signs and heads)
+#   - withdrawing money from the server balance
+# disable this if you have a huge player-base and notice performance issues
+storage-type: None
+
+# mysql connection details (ignore if not using)
+host: 127.0.0.1
+port: 3306
+user: quicktax
+password: password
+database-name: quicktax
+table-name: quicktax
+
+# language file to use (feel free to add your own lang file within the lang folder of the plugin and put the name here)
+lang-file: 'en.yml'
+
+# if true, will play a sound to the player when tax is collected
+enable-sound: true
+# sound to play (requires enable-sound to be true)
+# list of supported sound: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
+play-sound: ENTITY_PLAYER_LEVELUP
+
+#####################################################################################
+#                                                                                   #
+#                 Leaderboard Configuration (ignore if not using)                   #
+#                                                                                   #
+#####################################################################################
+
+# interval (in seconds) between updating the leaderboard (set to -1 to disable)
+# not recommended updating too frequently, especially if you have a large player-base
+# plugin reloads will restart/update this interval count from the point of reload
+update-interval: 3600
+
+# if true, will first update leaderboard on server start
+# if false, will first update leaderboard upon reaching the specified interval
+update-on-start: true
+
+#####################################################################################
+#                                                                                   #
+#          Grief Prevention Integration (ignore section if not using)               #
+#                                                                                   #
+#####################################################################################
+
+# whether to tax player balance depending on claimblocks as well (ratio set in respective sections)
+# if true, additional tax will be imposed on players depending on the total amount of claimblocks they have
+tax-claims: false
+
+#####################################################################################
+#                                                                                   #
+#                  Section for configuring tax on all players                       #
+#                                                                                   #
+#####################################################################################
+
+# the options here apply when the /quicktax collectall command is used
+all:
+  # if true, the values used for bal-amount will be in percentage (0.1 = 10%)
+  use-percentage: false
+
+  # amount of balance to tax
+  bal-amount: 100
+  # the amount of tax per claimblock (0.1 = tax $0.1 for every 1 claimblock the player has)
+  claims-ratio: 0.0
+
+#####################################################################################
+#                                                                                   #
+#                Section for configuring tax on players based on rank               #
+#                                                                                   #
+#####################################################################################
+
+# the options here apply when the /quicktax collectrank command is used
+rank-bracket:
+  # if true, the values used for bal will be in percentage (0.1 = 10%)
+  use-percentage: false
+
+  # list down your ranks in order of priority (players will be taxed based on first matched rank)
+  # the example below lists 3 ranks, each specified with the amount of balance to tax (claim is optional)
+  ranks:
+    Knight:
+      bal: 300
+      claims-ratio: 0.0
+    Apprentice:
+      bal: 200
+      claims-ratio: 0.0
+    Novice:
+      bal: 100
+      claims-ratio: 0.0
+
+#####################################################################################
+#                                                                                   #
+#             Section for configuring tax on players based on balance               #
+#                                                                                   #
+#####################################################################################
+
+# the options here apply when the /quicktax collectbal command is used
+bal-bracket:
+  # if true, the values used for bal will be in percentage (0.1 = 10%)
+  use-percentage: false
+
+  # list down your balance threshold to tax from (inclusive)
+  # the example below lists 3 balance thresholds, each specified with the amount of balance to tax (claim is optional)
+  amount:
+    100000:
+      bal: 300
+      claims-ratio: 0.0
+    10000:
+      bal: 200
+      claims-ratio: 0.0
+    1000:
+      bal: 100
+      claims-ratio: 0.0
+
+#####################################################################################
+#                                                                                   #
+#            Section for PAPI placeholders (ignore section if not using)            #
+#                                                                                   #
+#####################################################################################
+# list of PAPI placeholders are provided below
+# {} brackets indicate variable names e.g. {scheduleName} represents a valid schedule name and {rank} represents a player position
+
+# %qtax_server_tax_collected% - total server tax collected
+# %qtax_server_tax_balance% - total server tax balance
+# %qtax_player_total_paid% - player's total tax paid
+# %qtax_player_last_paid% - player's last tax paid
+# %qtax_schedule_type_{scheduleName}% - get the schedule type
+# %qtax_schedule_freq_{scheduleName}% - get the schedule frequency (seconds)
+# %qtax_schedule_next_run_{scheduleName}% - get the time for schedule's next run
+# %qtax_schedule_timezone_{scheduleName}% - get the schedule timezone
+# %qtax_top_name_{rank}% - get the player name at specified rank
+# %qtax_top_tax_{rank}% - get the player total tax paid at specified rank
