@@ -16,7 +16,8 @@ import org.bukkit.util.StringUtil;
  * CommandTabCompleter prompts users to tab complete the possible commands based on current input.
  */
 public class CommandTabCompleter implements TabCompleter {
-    private static final String[] COMMANDS = {"collectall", "collectrank", "collectbal", "collectname", "help", "stats", "top", "update", "reload", "server", "pay", "schedule"};
+    private static final String[] COMMANDS = {"collectall", "collectrank", "collectbal", "collectactivity",
+        "collectname", "help", "stats", "top", "update", "reload", "server", "pay", "schedule"};
 
     /**
      * Overridden method from TabCompleter, entry point for checking of user command to suggest

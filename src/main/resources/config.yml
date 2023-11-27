@@ -1,6 +1,36 @@
 #####################################################################################
 #                                                                                   #
-#                        General Configurations (Do not skip)                       #
+#                               General Configurations                              #
+#                                                                                   #
+#####################################################################################
+
+# language file to use (feel free to add your own lang file within the lang folder of the plugin and put the name here)
+lang-file: 'en.yml'
+
+# if true, will play a sound to the player when tax is collected
+enable-sound: true
+# sound to play (requires enable-sound to be true)
+# list of supported sound: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
+play-sound: ENTITY_PLAYER_LEVELUP
+
+#####################################################################################
+#                                                                                   #
+#                             Leaderboard Configurations                            #
+#                                                                                   #
+#####################################################################################
+
+# interval (in seconds) between updating the leaderboard (set to -1 to disable)
+# not recommended updating too frequently, especially if you have a large player-base
+# plugin reloads will restart/update this interval count from the point of reload
+update-interval: 3600
+
+# if true, will first update leaderboard on server start
+# if false, will first update leaderboard upon reaching the specified interval
+update-on-start: true
+
+#####################################################################################
+#                                                                                   #
+#                              Storage Configurations                               #
 #                                                                                   #
 #####################################################################################
 
@@ -21,33 +51,9 @@ password: password
 database-name: quicktax
 table-name: quicktax
 
-# language file to use (feel free to add your own lang file within the lang folder of the plugin and put the name here)
-lang-file: 'en.yml'
-
-# if true, will play a sound to the player when tax is collected
-enable-sound: true
-# sound to play (requires enable-sound to be true)
-# list of supported sound: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
-play-sound: ENTITY_PLAYER_LEVELUP
-
 #####################################################################################
 #                                                                                   #
-#                 Leaderboard Configuration (ignore if not using)                   #
-#                                                                                   #
-#####################################################################################
-
-# interval (in seconds) between updating the leaderboard (set to -1 to disable)
-# not recommended updating too frequently, especially if you have a large player-base
-# plugin reloads will restart/update this interval count from the point of reload
-update-interval: 3600
-
-# if true, will first update leaderboard on server start
-# if false, will first update leaderboard upon reaching the specified interval
-update-on-start: true
-
-#####################################################################################
-#                                                                                   #
-#          Grief Prevention Integration (ignore section if not using)               #
+#                           Grief Prevention Integration                            #
 #                                                                                   #
 #####################################################################################
 
@@ -57,7 +63,7 @@ tax-claims: false
 
 #####################################################################################
 #                                                                                   #
-#                  Section for configuring tax on all players                       #
+#                    Section for configuring tax on all players                     #
 #                                                                                   #
 #####################################################################################
 
@@ -85,19 +91,22 @@ rank-bracket:
   # list down your ranks in order of priority (players will be taxed based on first matched rank)
   # the example below lists 3 ranks, each specified with the amount of balance to tax (claim is optional)
   ranks:
+    # rank knight
     Knight:
       bal: 300
       claims-ratio: 0.0
+    # rank apprentice
     Apprentice:
       bal: 200
       claims-ratio: 0.0
+    # rank novice
     Novice:
       bal: 100
       claims-ratio: 0.0
 
 #####################################################################################
 #                                                                                   #
-#             Section for configuring tax on players based on balance               #
+#              Section for configuring tax on players based on balance              #
 #                                                                                   #
 #####################################################################################
 
@@ -109,13 +118,43 @@ bal-bracket:
   # list down your balance threshold to tax from (inclusive)
   # the example below lists 3 balance thresholds, each specified with the amount of balance to tax (claim is optional)
   amount:
+    # balance 100000 or more
     100000:
       bal: 300
       claims-ratio: 0.0
+    # balance 10000 or more
     10000:
       bal: 200
       claims-ratio: 0.0
+    # balance 1000 or more
     1000:
+      bal: 100
+      claims-ratio: 0.0
+
+#####################################################################################
+#                                                                                   #
+#             Section for configuring tax on players based on activity              #
+#                                                                                   #
+#####################################################################################
+
+# the options here apply when the /quicktax collectactivity command is used
+activity-bracket:
+  # if true, the values used for bal will be in percentage (0.1 = 10%)
+  use-percentage: false
+
+  # list down your last seen activity (in seconds) threshold to tax from (inclusive)
+  # the example below lists 3 activity thresholds, each specified with the amount of balance to tax (claim is optional)
+  last-seen:
+    # last seen more than 1 week ago
+    604800:
+      bal: 300
+      claims-ratio: 0.0
+    # last seen more than 1 day go
+    86400:
+      bal: 200
+      claims-ratio: 0.0
+    # currently active
+    0:
       bal: 100
       claims-ratio: 0.0
 

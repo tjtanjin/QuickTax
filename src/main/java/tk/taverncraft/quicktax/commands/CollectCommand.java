@@ -17,6 +17,8 @@ public class CollectCommand {
     private final String collectAllPerm = "quicktax.collectall";
     private final String collectRankPerm = "quicktax.collectrank";
     private final String collectBalPerm = "quicktax.collectbal";
+    private final String collectActivityPerm = "quicktax.collectactivity";
+
     Main main;
     TaxManager taxManager;
     ValidationManager validationManager;
@@ -59,6 +61,11 @@ public class CollectCommand {
                 return true;
             case "collectbal":
                 if (executeForBal(sender)) {
+                    break;
+                }
+                return true;
+            case "collectactivity":
+                if (executeForActivity(sender)) {
                     break;
                 }
                 return true;
@@ -157,6 +164,33 @@ public class CollectCommand {
         };
         MessageManager.sendMessage(sender, "tax-collect-bal-in-progress");
         main.getLogger().info("Collecting tax by balance...");
+        return true;
+    }
+
+    /**
+     * Executes checks and logic for collecting tax from players based on last seen activity.
+     *
+     * @param sender user who sent the command
+     *
+     * @return true if collection was successful
+     */
+    public boolean executeForActivity(CommandSender sender) throws NullPointerException {
+        if (!validationManager.hasPermission(collectActivityPerm, sender)) {
+            return false;
+        }
+
+        if (main.getStorageManager().isLoading()) {
+            MessageManager.sendMessage(sender, "player-load-in-progress");
+            return true;
+        }
+
+        TaxManager.task = () -> {
+            TaxManager.isCollecting = true;
+            taxManager.collectActivity(sender);
+            TaxManager.isCollecting = false;
+        };
+        MessageManager.sendMessage(sender, "tax-collect-activity-in-progress");
+        main.getLogger().info("Collecting tax by activity...");
         return true;
     }
 

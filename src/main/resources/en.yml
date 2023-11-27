@@ -19,10 +19,12 @@ tax-collect-individual-in-progress: '&aStarting tax collection from %player%' # 
 tax-collect-all-in-progress: '&aStarting tax collection from all players...'
 tax-collect-rank-in-progress: '&aStarting tax collection from players based on rank...'
 tax-collect-bal-in-progress: '&aStarting tax collection from players based on balance...'
+tax-collect-activity-in-progress: '&aStarting tax collection from players based on activity...'
 tax-collect-success-individual: '&aTax collected from &b%player%&a!' # %player%
 tax-collect-success-all: '&aTaxes collected for all players!'
 tax-collect-success-rank: '&aTaxes collected for players by rank!'
 tax-collect-success-bal: '&aTaxes collected for players by balance!'
+tax-collect-success-activity: '&aTaxes collected for players by activity!'
 tax-withdraw-success: '&aBalance withdrawn successfully!'
 tax-withdraw-fail: '&cThere is insufficient server tax balance!'
 tax-collect-fail-individual: '&b%player% &chas no money to pay tax!' # %player%
@@ -61,6 +63,7 @@ help-body: |
   &a/quicktax collectall &b- tax all players
   &a/quicktax collectrank &b- tax players based on rank
   &a/quicktax collectbal &b- tax players based on balance
+  &a/quicktax collectactivity &b- tax players based on activity
   &a/quicktax collectname <name> <amount> &b- tax a specific player
   &a/quicktax server stats &b- view the server total tax stats
   &a/quicktax server withdraw <amount> &b- withdraw money to self from server tax balance

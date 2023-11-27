@@ -1,8 +1,7 @@
-
-  <h1 align="center">QuickTax</h1>
 <p align="center">
   <img width=300 src="https://i.imgur.com/0YN8YoJ.png" />
 </p>
+<h1 align="center">QuickTax</h1>
 
 ## Table of Contents
 * [Introduction](#introduction)

@@ -45,7 +45,8 @@ public class CommandParser implements CommandExecutor {
 
             // command to collect tax (all/rank/balance/job/name)
             if (chatCmd.startsWith("collectall") || chatCmd.startsWith("collectbal")
-                    || chatCmd.startsWith("collectrank") || chatCmd.startsWith("collectname")) {
+                    || chatCmd.startsWith("collectrank") || chatCmd.startsWith("collectactivity")
+                    || chatCmd.startsWith("collectname")) {
                 return new CollectCommand(this.main).execute(sender, args);
             }
 

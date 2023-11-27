@@ -147,7 +147,10 @@ public class TaxManager {
     public void collectBal(CommandSender sender) throws NullPointerException {
         boolean usePercentage = this.main.getConfig().getBoolean("bal-bracket.use-percentage");
         ConfigurationSection bals = this.main.getConfig().getConfigurationSection("bal-bracket.amount");
-        assert bals != null;
+        if (bals == null) {
+            this.main.getLogger().info("Cannot find balance bracket, is the config correct?");
+            return;
+        }
         Set<String> balList = bals.getKeys(false);
         List<Integer> intList = new ArrayList<>();
         for(String s : balList){
@@ -179,6 +182,61 @@ public class TaxManager {
                     }
                 });
         MessageManager.sendMessage(sender, "tax-collect-success-bal");
+        if (validationManager.doStoreData(null)) {
+            this.main.getStatsManager().updateServerStats(this.totalTaxCollected, true);
+        }
+
+        if (this.main.getConfig().getString("storage-type", "none").equalsIgnoreCase("mysql")) {
+            main.getStorageManager().getStorageHelper().insertIntoDatabase();
+        }
+    }
+
+    /**
+     * Logic for collecting tax from players by activity.
+     *
+     * @param sender the executor of the command
+     */
+    public void collectActivity(CommandSender sender) throws NullPointerException {
+        boolean usePercentage = this.main.getConfig().getBoolean("activity-bracket.use-percentage");
+        ConfigurationSection lastSeenActivities = this.main.getConfig().getConfigurationSection("activity-bracket.last-seen");
+        if (lastSeenActivities == null) {
+            this.main.getLogger().info("Cannot find activity bracket, is the config correct?");
+            return;
+        }
+        Set<String> lastSeenActivitiesSet = lastSeenActivities.getKeys(false);
+        List<Long> longList = new ArrayList<>();
+        for(String s : lastSeenActivitiesSet){
+            longList.add(Long.valueOf(s));
+        }
+        Collections.sort(longList);
+        Collections.reverse(longList);
+
+        updateType<OfflinePlayer, Double, Double, Boolean> func;
+        boolean taxClaims = this.main.getConfig().getBoolean("tax-claims");
+        if (taxClaims) {
+            func = this::updatePlayerWithClaims;
+        } else {
+            func = this::updatePlayerNoClaims;
+        }
+
+        Arrays.stream(this.main.getServer().getOfflinePlayers())
+            .forEach(offlinePlayer -> {
+                for (long lastSeen : longList) {
+                    if (offlinePlayer.getName() == null) {
+                        continue;
+                    }
+                    long lastPlayed = offlinePlayer.getLastPlayed();
+                    long currentTime = System.currentTimeMillis();
+                    long elapsedTime = (currentTime - lastPlayed) / 1000;
+                    if (elapsedTime >= lastSeen) {
+                        double balTaxAmount = this.main.getConfig().getDouble("activity-bracket.last-seen." + lastSeen + ".bal");
+                        double claimsTaxAmount = this.main.getConfig().getDouble("activity-bracket.last-seen." + lastSeen + ".claims-ratio");
+                        func.updatePlayer(offlinePlayer, balTaxAmount, claimsTaxAmount, usePercentage);
+                        break;
+                    }
+                }
+            });
+        MessageManager.sendMessage(sender, "tax-collect-success-activity");
         if (validationManager.doStoreData(null)) {
             this.main.getStatsManager().updateServerStats(this.totalTaxCollected, true);
         }
