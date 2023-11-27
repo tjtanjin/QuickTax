@@ -38,12 +38,12 @@ Some of the key features provided by the plugin are as shown below:
   [**GriefPrevention**](https://www.spigotmc.org/resources/griefprevention.1884/))
 - Schedule real-time collection of taxes
 - Option to play sound to players on collection
-- Option for players to view next collection tim
+- Option for players to view next collection time
 - Option for players to self-pay tax directly to the server
 - Track/store player and server tax stats (YAML/MySQL)
 - Withdraw money from the server tax balance 
-- Setup taxpayer leaderboard via signs and heads!
-- PlaceholderAPI support (requires PlaceholderAPI)
+- Setup taxpayer leaderboard via signs and heads
+- PlaceholderAPI support (requires [**PlaceholderAPI**](https://www.spigotmc.org/resources/placeholderapi.6245/))
 - Fully customizable messages (with options for your own language files!)
 
 The features above are just a glimpse of what the plugin is capable of. More detailed guides and 
