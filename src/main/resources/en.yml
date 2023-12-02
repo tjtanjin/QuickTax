@@ -29,6 +29,7 @@ tax-withdraw-success: '&aBalance withdrawn successfully!'
 tax-withdraw-fail: '&cThere is insufficient server tax balance!'
 tax-collect-fail-individual: '&b%player% &chas no money to pay tax!' # %player%
 tax-collect-already-running: '&cAn existing tax collection is ongoing, please try again later!'
+tax-exempt: '&cThe player &b%player% &cis exempted from your tax collection!'
 player-pay-tax-fail: '&cYou have insufficient balance to pay tax!' # %player%
 player-pay-tax-success: '&aTax was collected from you and you have paid $%amount%!' # %player%, %amount%
 player-receive-tax-money: '&aYou received $%amount% from the server tax balance!' # %amount%

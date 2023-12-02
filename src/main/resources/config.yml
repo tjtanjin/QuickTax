@@ -13,6 +13,15 @@ enable-sound: true
 # list of supported sound: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
 play-sound: ENTITY_PLAYER_LEVELUP
 
+# note: tax exemptions can be done via the following 6 permission nodes:
+# quicktax.exempt.*
+# quicktax.exempt.collectname
+# quicktax.exempt.collectall
+# quicktax.exempt.collectbal
+# quicktax.exempt.collectrank
+# quicktax.exempt.collectactivity
+# more information here: https://github.com/tjtanjin/QuickTax/wiki/Tutorial#commands--permissions
+
 #####################################################################################
 #                                                                                   #
 #                             Leaderboard Configurations                            #

@@ -25,6 +25,14 @@ public class TaxManager {
     public static boolean isCollecting;
     public static Runnable task;
 
+    // permission nodes for tax exemptions
+    private final String exemptFullPerm = "quicktax.exempt.*";
+    private final String exemptCollectNamePerm = "quicktax.exempt.collectname";
+    private final String exemptCollectAllPerm = "quicktax.exempt.collectall";
+    private final String exemptCollectBalPerm = "quicktax.exempt.collectbal";
+    private final String exemptCollectRankPerm = "quicktax.exempt.collectrank";
+    private final String exemptCollectActivityPerm = "quicktax.exempt.collectactivity";
+
     /**
      * Constructor for TaxManager.
      */
@@ -51,6 +59,13 @@ public class TaxManager {
         }
 
         OfflinePlayer player = this.main.getServer().getOfflinePlayer(name);
+        if (isTaxExempt(player, exemptCollectNamePerm)) {
+            MessageManager.sendMessage(sender, "tax-exempt",
+                new String[]{"%player%"},
+                new String[]{name});
+            return;
+        }
+
         if (func.updatePlayer(player, Double.parseDouble(amount), 0.0, false)) {
             MessageManager.sendMessage(sender, "tax-collect-success-individual",
                     new String[]{"%player%"},
@@ -60,6 +75,7 @@ public class TaxManager {
                     new String[]{"%player%"},
                     new String[]{name});
         }
+
         if (validationManager.doStoreData(null)) {
             this.main.getStatsManager().updateServerStats(this.totalTaxCollected, true);
         }
@@ -88,7 +104,12 @@ public class TaxManager {
         }
 
         Arrays.stream(this.main.getServer().getOfflinePlayers())
-                .forEach(offlinePlayer -> func.updatePlayer(offlinePlayer, balTaxAmount, claimsTaxAmount, usePercentage));
+                .forEach(offlinePlayer -> {
+                    if (isTaxExempt(offlinePlayer, exemptCollectAllPerm)) {
+                        return;
+                    }
+                    func.updatePlayer(offlinePlayer, balTaxAmount, claimsTaxAmount, usePercentage);
+                });
         MessageManager.sendMessage(sender, "tax-collect-success-all");
         if (validationManager.doStoreData(null)) {
             this.main.getStatsManager().updateServerStats(this.totalTaxCollected, true);
@@ -118,6 +139,9 @@ public class TaxManager {
 
         Arrays.stream(this.main.getServer().getOfflinePlayers())
                 .forEach(offlinePlayer -> {
+                    if (isTaxExempt(offlinePlayer, exemptCollectRankPerm)) {
+                        return;
+                    }
                     for (String rank : ranks.getKeys(true)) {
                         String[] playerGroups = Main.getPermissions().getPlayerGroups(Bukkit.getWorlds().get(0).getName(), offlinePlayer);
                         if (Arrays.stream(playerGroups).anyMatch(rank::equalsIgnoreCase)) {
@@ -169,6 +193,9 @@ public class TaxManager {
 
         Arrays.stream(this.main.getServer().getOfflinePlayers())
                 .forEach(offlinePlayer -> {
+                    if (isTaxExempt(offlinePlayer, exemptCollectBalPerm)) {
+                        return;
+                    }
                     for (int bal : intList) {
                         if (offlinePlayer.getName() == null) {
                             continue;
@@ -221,6 +248,9 @@ public class TaxManager {
 
         Arrays.stream(this.main.getServer().getOfflinePlayers())
             .forEach(offlinePlayer -> {
+                if (isTaxExempt(offlinePlayer, exemptCollectActivityPerm)) {
+                    return;
+                }
                 for (long lastSeen : longList) {
                     if (offlinePlayer.getName() == null) {
                         continue;
@@ -399,6 +429,17 @@ public class TaxManager {
         }
 
         return true;
+    }
+
+    /**
+     * Checks if a player is exempted from tax.
+     *
+     * @param player player to check
+     * @param permissionNode permission node used to determine if player is exempt
+     */
+    private boolean isTaxExempt(OfflinePlayer player, String permissionNode) {
+        return Main.getPermissions().playerHas(Bukkit.getWorlds().get(0).getName(), player, exemptFullPerm)
+            || Main.getPermissions().playerHas(Bukkit.getWorlds().get(0).getName(), player, permissionNode);
     }
 
     /**
