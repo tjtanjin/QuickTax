@@ -3,6 +3,10 @@
 </p>
 <h1 align="center">QuickTax</h1>
 
+<p align="center">
+  <a href="https://github.com/tjtanjin/QuickTax/actions"> <img src="https://github.com/tjtanjin/QuickTax/actions/workflows/maven.yml/badge.svg" /> </a>
+</p>
+
 ## Table of Contents
 * [Introduction](#introduction)
 * [Features](#features)
