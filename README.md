@@ -23,9 +23,10 @@ plugin that you need! Whether it's taxing all players equally or based on their 
 on their balance, this plugin supports it all! Want to include property tax by taxing based 
 on claimblocks? It's possible as well! Even better, schedule tax collections so that you can set 
 up once and let the plugin do the rest of the work! Worried about performance? the plugin does 
-most of its task asynchronously, minimizing the performance impact that it can have on your server!
+most of its task asynchronously, minimizing the performance impact that it can have on your server! You may download the plugin via the following links:
 
-The spigot link to download the plugin can be found **[here](https://www.spigotmc.org/resources/quicktax.96495/)**. If you require any assistance, please reach out for support on our **[discord](https://discord.gg/X8VSdZvBQY).** Alternatively, you may also open a github issue.
+- [Modrinth](https://modrinth.com/plugin/quicktax)
+- [Spigot](https://www.spigotmc.org/resources/quicktax.96495/)
 
 ### Features
 <p align="center">
