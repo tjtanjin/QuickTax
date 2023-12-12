@@ -4,15 +4,18 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 
+import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.PlayerData;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 
+import org.bukkit.scheduler.BukkitRunnable;
 import tk.taverncraft.quicktax.Main;
 
 /**
@@ -279,11 +282,12 @@ public class TaxManager {
     /**
      * Gets amount to subtract from player without claims.
      *
+     * @param player player being taxed
      * @param usePercentage whether to deduct by percentage or absolute value
      * @param taxAmount amount of tax to apply
      * @param playerBal current balance of player
      */
-    public double getSubtractAmountNoClaims(boolean usePercentage, double taxAmount, double playerBal) {
+    public double getSubtractAmountNoClaims(OfflinePlayer player, boolean usePercentage, double taxAmount, double playerBal) {
         double subtractAmount;
         if (usePercentage) {
             subtractAmount = playerBal * taxAmount;
@@ -292,8 +296,19 @@ public class TaxManager {
         }
 
         // prevent negative taxes
-        if (subtractAmount < 0 || playerBal < subtractAmount) {
+        if (subtractAmount < 0) {
             subtractAmount = 0;
+        }
+
+        // handles case when player has not enough money
+        if (playerBal < subtractAmount) {
+            int debtMode = main.getConfig().getInt("debt-mode", 0);
+            if (debtMode == 0) {
+                subtractAmount = 0;
+            } else if (debtMode == 1) {
+                subtractAmount = playerBal;
+            }
+            penalizePlayer(player, false);
         }
 
         subtractAmount = new BigDecimal(subtractAmount).setScale(2, RoundingMode.HALF_UP).doubleValue(); //rounding
@@ -303,11 +318,14 @@ public class TaxManager {
     /**
      * Gets amount to subtract from player with claims.
      *
+     * @param player player being taxed
      * @param usePercentage whether to deduct by percentage or absolute value
      * @param balTaxAmount amount of tax to apply
      * @param playerBal current balance of player
+     * @param claimsTaxAmount amount of bal to tax per claimblock
+     * @param playerClaims number of claimblocks player has
      */
-    public double getSubtractAmountWithClaims(boolean usePercentage, double balTaxAmount, double playerBal, double claimsTaxAmount, double playerClaims) {
+    public double getSubtractAmountWithClaims(OfflinePlayer player, boolean usePercentage, double balTaxAmount, double playerBal, double claimsTaxAmount, double playerClaims) {
         double subtractAmount;
         if (usePercentage) {
             subtractAmount = playerBal * balTaxAmount;
@@ -318,8 +336,19 @@ public class TaxManager {
         subtractAmount += claimsTaxAmount * playerClaims;
 
         // prevent negative taxes
-        if (subtractAmount < 0 || playerBal < subtractAmount) {
+        if (subtractAmount < 0) {
             subtractAmount = 0;
+        }
+
+        // handles case when player has not enough money
+        if (playerBal < subtractAmount) {
+            int debtMode = main.getConfig().getInt("debt-mode", 0);
+            if (debtMode == 0) {
+                subtractAmount = 0;
+            } else if (debtMode == 1) {
+                subtractAmount = playerBal;
+            }
+            penalizePlayer(player, true);
         }
 
         subtractAmount = new BigDecimal(subtractAmount).setScale(2, RoundingMode.HALF_UP).doubleValue(); //rounding
@@ -342,14 +371,13 @@ public class TaxManager {
         double playerBal = Main.getEconomy().getBalance(player);
         double subtractAmount;
 
-        subtractAmount = getSubtractAmountNoClaims(usePercentage, balTaxAmount, playerBal);
         try {
             PlayerData playerData = GriefPrevention.instance.dataStore.getPlayerData(player.getUniqueId());
             double playerClaims = playerData.getAccruedClaimBlocks();
-
-            subtractAmount = getSubtractAmountWithClaims(usePercentage, balTaxAmount, playerBal, claimsTaxAmount, playerClaims);
+            subtractAmount = getSubtractAmountWithClaims(player, usePercentage, balTaxAmount, playerBal, claimsTaxAmount, playerClaims);
         } catch (NoClassDefFoundError e) {
             Bukkit.getLogger().warning(e.getMessage());
+            subtractAmount = getSubtractAmountNoClaims(player, usePercentage, balTaxAmount, playerBal);
         }
 
         // early break if nothing to subtract
@@ -399,7 +427,7 @@ public class TaxManager {
         double playerBal = Main.getEconomy().getBalance(player);
         double subtractAmount;
 
-        subtractAmount = getSubtractAmountNoClaims(usePercentage, balTaxAmount, playerBal);
+        subtractAmount = getSubtractAmountNoClaims(player, usePercentage, balTaxAmount, playerBal);
         // early break if nothing to subtract
         if (subtractAmount == 0) {
             return false;
@@ -440,6 +468,32 @@ public class TaxManager {
     private boolean isTaxExempt(OfflinePlayer player, String permissionNode) {
         return Main.getPermissions().playerHas(Bukkit.getWorlds().get(0).getName(), player, exemptFullPerm)
             || Main.getPermissions().playerHas(Bukkit.getWorlds().get(0).getName(), player, permissionNode);
+    }
+
+    /**
+     * Penalizes a player who does not have enough balance to pay taxes.
+     *
+     * @param player player being penalized
+     * @param penalizeClaims if true, will penalize claims as well
+     */
+    private void penalizePlayer(OfflinePlayer player, boolean penalizeClaims) {
+        if (main.getConfig().getBoolean("auto-remove-claims", false) && penalizeClaims) {
+            Bukkit.getScheduler().runTask(main, () -> {
+                GriefPrevention.instance.dataStore.deleteClaimsForPlayer(player.getUniqueId(), false);
+            });
+        }
+
+        List<String> debtCommands = main.getConfig().getStringList("debt-commands");
+        for (String command : debtCommands) {
+            String playerParsedCommand = command.replaceAll("%player%", player.getName());
+            String papiParsedCommand = PlaceholderAPI.setPlaceholders(player, playerParsedCommand);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), papiParsedCommand);
+                }
+            }.runTask(main);
+        }
     }
 
     /**

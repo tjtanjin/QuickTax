@@ -41,6 +41,7 @@ Some of the key features provided by the plugin are as shown below:
 - Collect additional tax depending on the number of claimblocks the player has (requires
   [**GriefPrevention**](https://www.spigotmc.org/resources/griefprevention.1884/))
 - Schedule real-time collection of taxes
+- Option to exempt players from taxes
 - Option to play sound to players on collection
 - Option for players to view next collection time
 - Option for players to self-pay tax directly to the server

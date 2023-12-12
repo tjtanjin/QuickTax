@@ -13,6 +13,17 @@ enable-sound: true
 # list of supported sound: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
 play-sound: ENTITY_PLAYER_LEVELUP
 
+# debt mode is used to determine what happens if a player does not have enough money to pay tax
+# 0 - player will not be taxed at all (exempted)
+# 1 - player will be taxed all current balance (balance will essentially be set to 0)
+# 2 - player will be taxed the full amount (player will end up with a negative balance)
+debt-mode: 0
+
+# commands to run if a player does not have enough money to pay taxes, use %player% for player name
+# note: commands also support papi placeholders
+debt-commands:
+  - broadcast &b%player% &cdoes not have enough money to pay taxes!
+
 # note: tax exemptions can be done via the following 6 permission nodes:
 # quicktax.exempt.*
 # quicktax.exempt.collectname
@@ -69,6 +80,11 @@ table-name: quicktax
 # whether to tax player balance depending on claimblocks as well (ratio set in respective sections)
 # if true, additional tax will be imposed on players depending on the total amount of claimblocks they have
 tax-claims: false
+
+# whether to remove all claims belonging to player if player does not have enough money to pay taxes
+# requires tax-claims to be true as well
+# test and use this with caution since removing player claims is a destructive action!
+auto-remove-claims: false
 
 #####################################################################################
 #                                                                                   #
