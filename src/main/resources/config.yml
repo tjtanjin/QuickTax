@@ -95,6 +95,7 @@ auto-remove-claims: false
 # the options here apply when the /quicktax collectall command is used
 all:
   # if true, the values used for bal-amount will be in percentage (0.1 = 10%)
+  # note that if player balance is negative, then percentage will default to 0% (no tax)
   use-percentage: false
 
   # amount of balance to tax
@@ -120,6 +121,7 @@ rank-bracket:
     Knight:
       bal: 300
       claims-ratio: 0.0
+      use-percentage: false # optional, if set will apply only to this specific rank
     # rank apprentice
     Apprentice:
       bal: 200
@@ -147,6 +149,7 @@ bal-bracket:
     100000:
       bal: 300
       claims-ratio: 0.0
+      use-percentage: false # optional, if set will apply only to this specific balance bracket
     # balance 10000 or more
     10000:
       bal: 200
@@ -174,6 +177,7 @@ activity-bracket:
     604800:
       bal: 300
       claims-ratio: 0.0
+      use-percentage: false # optional, if set will apply only to this specific activity bracket
     # last seen more than 1 day go
     86400:
       bal: 200

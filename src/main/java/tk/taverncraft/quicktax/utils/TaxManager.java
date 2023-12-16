@@ -94,9 +94,9 @@ public class TaxManager {
      * @param sender the executor of the command
      */
     public void collectAll(CommandSender sender) throws NullPointerException {
-        double balTaxAmount = this.main.getConfig().getDouble("all.bal-amount");
-        double claimsTaxAmount = this.main.getConfig().getDouble("all.claims-ratio");
-        boolean usePercentage = this.main.getConfig().getBoolean("all.use-percentage");
+        double balTaxAmount = this.main.getConfig().getDouble("all.bal-amount", 0);
+        double claimsTaxAmount = this.main.getConfig().getDouble("all.claims-ratio", 0);
+        boolean usePercentage = this.main.getConfig().getBoolean("all.use-percentage", false);
 
         updateType<OfflinePlayer, Double, Double, Boolean> func;
         boolean taxClaims = this.main.getConfig().getBoolean("tax-claims");
@@ -129,7 +129,7 @@ public class TaxManager {
      * @param sender the executor of the command
      */
     public void collectRank(CommandSender sender) throws NullPointerException {
-        boolean usePercentage = this.main.getConfig().getBoolean("rank-bracket.use-percentage");
+        boolean usePercentage = this.main.getConfig().getBoolean("rank-bracket.use-percentage", false);
         ConfigurationSection ranks = this.main.getConfig().getConfigurationSection("rank-bracket.ranks");
 
         updateType<OfflinePlayer, Double, Double, Boolean> func;
@@ -148,9 +148,10 @@ public class TaxManager {
                     for (String rank : ranks.getKeys(true)) {
                         String[] playerGroups = Main.getPermissions().getPlayerGroups(Bukkit.getWorlds().get(0).getName(), offlinePlayer);
                         if (Arrays.stream(playerGroups).anyMatch(rank::equalsIgnoreCase)) {
-                            double balTaxAmount = this.main.getConfig().getDouble("rank-bracket.ranks." + rank + ".bal");
-                            double claimsTaxAmount = this.main.getConfig().getDouble("rank-bracket.ranks." + rank + ".claims-ratio");
-                            func.updatePlayer(offlinePlayer, balTaxAmount, claimsTaxAmount, usePercentage);
+                            double balTaxAmount = this.main.getConfig().getDouble("rank-bracket.ranks." + rank + ".bal", 0);
+                            double claimsTaxAmount = this.main.getConfig().getDouble("rank-bracket.ranks." + rank + ".claims-ratio", 0);
+                            boolean finalUsePercentage = this.main.getConfig().getBoolean("rank-bracket.ranks." + rank + ".use-percentage", usePercentage);
+                            func.updatePlayer(offlinePlayer, balTaxAmount, claimsTaxAmount, finalUsePercentage);
                             break;
                         }
                     }
@@ -172,7 +173,7 @@ public class TaxManager {
      * @param sender the executor of the command
      */
     public void collectBal(CommandSender sender) throws NullPointerException {
-        boolean usePercentage = this.main.getConfig().getBoolean("bal-bracket.use-percentage");
+        boolean usePercentage = this.main.getConfig().getBoolean("bal-bracket.use-percentage", false);
         ConfigurationSection bals = this.main.getConfig().getConfigurationSection("bal-bracket.amount");
         if (bals == null) {
             this.main.getLogger().info("Cannot find balance bracket, is the config correct?");
@@ -204,9 +205,10 @@ public class TaxManager {
                             continue;
                         }
                         if (BigDecimal.valueOf(Main.getEconomy().getBalance(offlinePlayer)).compareTo(BigDecimal.valueOf((double) bal)) >= 0) {
-                            double balTaxAmount = this.main.getConfig().getDouble("bal-bracket.amount." + bal + ".bal");
-                            double claimsTaxAmount = this.main.getConfig().getDouble("bal-bracket.amount." + bal + ".claims-ratio");
-                            func.updatePlayer(offlinePlayer, balTaxAmount, claimsTaxAmount, usePercentage);
+                            double balTaxAmount = this.main.getConfig().getDouble("bal-bracket.amount." + bal + ".bal", 0);
+                            double claimsTaxAmount = this.main.getConfig().getDouble("bal-bracket.amount." + bal + ".claims-ratio", 0);
+                            boolean finalUsePercentage = this.main.getConfig().getBoolean("bal-bracket.amount." + bal + ".use-percentage", usePercentage);
+                            func.updatePlayer(offlinePlayer, balTaxAmount, claimsTaxAmount, finalUsePercentage);
                             break;
                         }
                     }
@@ -227,7 +229,7 @@ public class TaxManager {
      * @param sender the executor of the command
      */
     public void collectActivity(CommandSender sender) throws NullPointerException {
-        boolean usePercentage = this.main.getConfig().getBoolean("activity-bracket.use-percentage");
+        boolean usePercentage = this.main.getConfig().getBoolean("activity-bracket.use-percentage", false);
         ConfigurationSection lastSeenActivities = this.main.getConfig().getConfigurationSection("activity-bracket.last-seen");
         if (lastSeenActivities == null) {
             this.main.getLogger().info("Cannot find activity bracket, is the config correct?");
@@ -262,9 +264,10 @@ public class TaxManager {
                     long currentTime = System.currentTimeMillis();
                     long elapsedTime = (currentTime - lastPlayed) / 1000;
                     if (elapsedTime >= lastSeen) {
-                        double balTaxAmount = this.main.getConfig().getDouble("activity-bracket.last-seen." + lastSeen + ".bal");
-                        double claimsTaxAmount = this.main.getConfig().getDouble("activity-bracket.last-seen." + lastSeen + ".claims-ratio");
-                        func.updatePlayer(offlinePlayer, balTaxAmount, claimsTaxAmount, usePercentage);
+                        double balTaxAmount = this.main.getConfig().getDouble("activity-bracket.last-seen." + lastSeen + ".bal", 0);
+                        double claimsTaxAmount = this.main.getConfig().getDouble("activity-bracket.last-seen." + lastSeen + ".claims-ratio", 0);
+                        boolean finalUsePercentage = this.main.getConfig().getBoolean("activity-bracket.last-seen." + lastSeen + ".use-percentage", usePercentage);
+                        func.updatePlayer(offlinePlayer, balTaxAmount, claimsTaxAmount, finalUsePercentage);
                         break;
                     }
                 }
@@ -290,18 +293,18 @@ public class TaxManager {
     public double getSubtractAmountNoClaims(OfflinePlayer player, boolean usePercentage, double taxAmount, double playerBal) {
         double subtractAmount;
         if (usePercentage) {
+            // keep tax percentage between 0 and 1
+            taxAmount = Math.min(1, Math.max(0, taxAmount));
+            if (playerBal < 0) {
+                return 0;
+            }
             subtractAmount = playerBal * taxAmount;
         } else {
             subtractAmount = taxAmount;
         }
 
-        // prevent negative taxes
-        if (subtractAmount < 0) {
-            subtractAmount = 0;
-        }
-
-        // handles case when player has not enough money
-        if (playerBal < subtractAmount) {
+        // handles case when player has not enough money but subtract amount is positive
+        if (subtractAmount > 0 && playerBal < subtractAmount) {
             int debtMode = main.getConfig().getInt("debt-mode", 0);
             if (debtMode == 0) {
                 subtractAmount = 0;
@@ -328,6 +331,11 @@ public class TaxManager {
     public double getSubtractAmountWithClaims(OfflinePlayer player, boolean usePercentage, double balTaxAmount, double playerBal, double claimsTaxAmount, double playerClaims) {
         double subtractAmount;
         if (usePercentage) {
+            // keep tax percentage between 0 and 1
+            balTaxAmount = Math.min(1, Math.max(0, balTaxAmount));
+            if (playerBal < 0) {
+                return 0;
+            }
             subtractAmount = playerBal * balTaxAmount;
         } else {
             subtractAmount = balTaxAmount;
@@ -335,13 +343,8 @@ public class TaxManager {
 
         subtractAmount += claimsTaxAmount * playerClaims;
 
-        // prevent negative taxes
-        if (subtractAmount < 0) {
-            subtractAmount = 0;
-        }
-
-        // handles case when player has not enough money
-        if (playerBal < subtractAmount) {
+        // handles case when player has not enough money but subtract amount is positive
+        if (subtractAmount > 0 && playerBal < subtractAmount) {
             int debtMode = main.getConfig().getInt("debt-mode", 0);
             if (debtMode == 0) {
                 subtractAmount = 0;
@@ -397,10 +400,18 @@ public class TaxManager {
 
         // needed in rare situations where async access to economy plugin is disallowed
         try {
-            Main.getEconomy().withdrawPlayer(player, subtractAmount);
+            if (subtractAmount > 0) {
+                Main.getEconomy().withdrawPlayer(player, subtractAmount);
+            } else {
+                Main.getEconomy().depositPlayer(player, Math.abs(subtractAmount));
+            }
         } catch (IllegalStateException e) {
             double finalSubtractAmount = subtractAmount;
-            Bukkit.getScheduler().runTask(main, () -> Main.getEconomy().withdrawPlayer(player, finalSubtractAmount));
+            if (subtractAmount > 0) {
+                Bukkit.getScheduler().runTask(main, () -> Main.getEconomy().withdrawPlayer(player, finalSubtractAmount));
+            } else {
+                Bukkit.getScheduler().runTask(main, () -> Main.getEconomy().depositPlayer(player, Math.abs(finalSubtractAmount)));
+            }
         }
 
         if (validationManager.doStoreData(null)) {
@@ -445,9 +456,17 @@ public class TaxManager {
 
         // needed in rare situations where async access to economy plugin is disallowed
         try {
-            Main.getEconomy().withdrawPlayer(player, subtractAmount);
+            if (subtractAmount > 0) {
+                Main.getEconomy().withdrawPlayer(player, subtractAmount);
+            } else {
+                Main.getEconomy().depositPlayer(player, Math.abs(subtractAmount));
+            }
         } catch (IllegalStateException e) {
-            Bukkit.getScheduler().runTask(main, () -> Main.getEconomy().withdrawPlayer(player, subtractAmount));
+            if (subtractAmount > 0) {
+                Bukkit.getScheduler().runTask(main, () -> Main.getEconomy().withdrawPlayer(player, subtractAmount));
+            } else {
+                Bukkit.getScheduler().runTask(main, () -> Main.getEconomy().depositPlayer(player, Math.abs(subtractAmount)));
+            }
         }
 
         if (validationManager.doStoreData(null)) {
