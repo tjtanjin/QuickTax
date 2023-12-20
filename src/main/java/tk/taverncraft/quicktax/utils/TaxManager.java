@@ -376,7 +376,12 @@ public class TaxManager {
 
         try {
             PlayerData playerData = GriefPrevention.instance.dataStore.getPlayerData(player.getUniqueId());
-            double playerClaims = playerData.getAccruedClaimBlocks();
+            double playerClaims;
+            if (main.getConfig().getBoolean("active-claims-only", false)) {
+                playerClaims = playerData.getAccruedClaimBlocks() - playerData.getRemainingClaimBlocks();
+            } else {
+                playerClaims = playerData.getAccruedClaimBlocks();
+            }
             subtractAmount = getSubtractAmountWithClaims(player, usePercentage, balTaxAmount, playerBal, claimsTaxAmount, playerClaims);
         } catch (NoClassDefFoundError e) {
             Bukkit.getLogger().warning(e.getMessage());
@@ -390,8 +395,11 @@ public class TaxManager {
 
         if (player.isOnline()) {
             if (main.getConfig().getBoolean("enable-sound")) {
-                player.getPlayer().getWorld().playSound(player.getPlayer().getLocation(),
+                try {
+                    player.getPlayer().getWorld().playSound(player.getPlayer().getLocation(),
                         Sound.valueOf(main.getConfig().getString("play-sound")), 1, 1);
+                } catch(Exception ignored) {
+                }
             }
             MessageManager.sendMessage(player.getPlayer(), "player-pay-tax-success",
                     new String[]{"%player%", "%amount%"},
@@ -446,8 +454,11 @@ public class TaxManager {
 
         if (player.isOnline()) {
             if (main.getConfig().getBoolean("enable-sound")) {
-                player.getPlayer().getWorld().playSound(player.getPlayer().getLocation(),
+                try {
+                    player.getPlayer().getWorld().playSound(player.getPlayer().getLocation(),
                         Sound.valueOf(main.getConfig().getString("play-sound")), 1, 1);
+                } catch(Exception ignored) {
+                }
             }
             MessageManager.sendMessage(player.getPlayer(), "player-pay-tax-success",
                     new String[]{"%player%", "%amount%"},

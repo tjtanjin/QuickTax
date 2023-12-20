@@ -24,7 +24,7 @@ import tk.taverncraft.quicktax.Main;
  * Schedule contains all information related to a single schedule required for starting, stopping and viewing.
  */
 public class Schedule {
-    private static final String[] allowedTypes = {"collectrank", "collectbal", "collectall"};
+    private static final String[] allowedTypes = {"collectrank", "collectbal", "collectactivity", "collectall"};
 
     String name;
     boolean enabled;
@@ -146,6 +146,8 @@ public class Schedule {
             taxManager.collectAll(Bukkit.getConsoleSender());
         } else if (this.type.equals("collectrank")) {
             taxManager.collectRank(Bukkit.getConsoleSender());
+        } else if (this.type.equals("collectactivity")) {
+            taxManager.collectActivity(Bukkit.getConsoleSender());
         } else {
             taxManager.collectBal(Bukkit.getConsoleSender());
         }

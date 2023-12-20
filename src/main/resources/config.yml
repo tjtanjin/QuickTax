@@ -81,6 +81,10 @@ table-name: quicktax
 # if true, additional tax will be imposed on players depending on the total amount of claimblocks they have
 tax-claims: false
 
+# whether to tax based on claimblocks that are used only
+# applicable only when tax-claims is true as well
+active-claims-only: false
+
 # whether to remove all claims belonging to player if player does not have enough money to pay taxes
 # requires tax-claims to be true as well
 # test and use this with caution since removing player claims is a destructive action!
