@@ -83,7 +83,9 @@ public class Main extends JavaPlugin {
         // Optional: Add custom charts
         metrics.addCustomChart(new Metrics.SimplePie("chart_id", () -> "My value"));
 
-        if (Bukkit.getVersion().contains("1.11") || Bukkit.getVersion().contains("1.12")) {
+        if (Bukkit.getVersion().contains("1.8") || Bukkit.getVersion().contains("1.9")
+            || Bukkit.getVersion().contains("1.10") || Bukkit.getVersion().contains("1.11")
+            || Bukkit.getVersion().contains("1.12")) {
             Bukkit.getScheduler().runTaskLater(this, this::loadDependencies, 1);
         } else {
             this.getServer().getPluginManager().registerEvents(new DependencyLoadEvent(this), this);
