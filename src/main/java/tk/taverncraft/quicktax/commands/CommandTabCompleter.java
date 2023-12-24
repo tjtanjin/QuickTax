@@ -42,6 +42,11 @@ public class CommandTabCompleter implements TabCompleter {
         } else if (args.length == 2 && args[0].equalsIgnoreCase("server")) {
             completions.add("stats");
             completions.add("withdraw");
+            completions.add("admin");
+        } else if (args.length == 3 && args[0].equalsIgnoreCase("server") && args[1].equalsIgnoreCase("admin")) {
+            completions.add("add");
+            completions.add("take");
+            completions.add("set");
         } else if (args.length == 4 && args[1].equalsIgnoreCase("withdraw")) {
             for (Player p : Bukkit.getOnlinePlayers()) {
                 completions.add(p.getName());

@@ -66,12 +66,14 @@ public class CommandParser implements CommandExecutor {
                 }
             }
 
-            // command to view server stats or withdraw server balance
+            // command to view server stats, withdraw server balance or admin modify server balance
             if (chatCmd.equals("server")) {
                 if (args.length == 2 && args[1].equalsIgnoreCase("stats")) {
                     return new StatsCommand(this.main).execute(sender, true);
                 } else if (args.length > 2 && args[1].equalsIgnoreCase("withdraw")) {
                     return new WithdrawCommand(this.main).execute(sender, args);
+                } else if (args.length > 2 && args[1].equalsIgnoreCase("admin")) {
+                    return new AdminCommand(this.main).execute(sender, args);
                 }
             }
 

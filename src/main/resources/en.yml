@@ -34,6 +34,11 @@ player-pay-tax-fail: '&cYou have insufficient balance to pay tax!' # %player%
 player-pay-tax-success: '&aTax was collected from you and you have paid $%amount%!' # %player%, %amount%
 player-receive-tax-money: '&aYou received $%amount% from the server tax balance!' # %amount%
 
+# admin modify server balance messages
+admin-add-server-balance: '&aYou have added $%amount% to the server balance!' # %amount%
+admin-take-server-balance: '&aYou have taken $%amount% from the server balance!' # %amount%
+admin-set-server-balance: '&aYou have set $%amount% as the server balance!' # %amount%
+
 # scheduling messages
 schedule-disabled: '&cThis command requires schedule to be enabled in its config!'
 schedule-not-found: '&cThere are no tax collection schedules to run!'
@@ -69,6 +74,9 @@ help-body: |
   &a/quicktax server stats &b- view the server total tax stats
   &a/quicktax server withdraw <amount> &b- withdraw money to self from server tax balance
   &a/quicktax server withdraw <amount> <name> &b- withdraw money to player from server tax balance
+  &a/quicktax server admin add <amount> &b- add money to the server tax balance
+  &a/quicktax server admin take <amount> &b- take money from the server tax balance
+  &a/quicktax server admin set <amount> &b- set the server tax balance
   &a/quicktax schedule start &b- start tax collection schedule
   &a/quicktax schedule stop &b- stop tax collection schedule
   &a/quicktax schedule view &b- view all schedules

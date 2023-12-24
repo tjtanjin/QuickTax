@@ -190,6 +190,54 @@ public class StatsManager {
     }
 
     /**
+     * Adds to the server balance as an admin.
+     *
+     * @param amount the amount of balance to add
+     */
+    public void addServerBalanceAsAdmin(double amount) {
+        FileConfiguration serverStatsConfig = this.main.getServerStatsConfig();
+        File serverStatsFile = new File(this.main.getDataFolder(), "serverstats.yml");
+        serverStatsConfig.set("total-tax-balance", serverStatsConfig.getInt("total-tax-balance") + amount);
+        try {
+            serverStatsConfig.save(serverStatsFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Takes from the server balance as an admin.
+     *
+     * @param amount the amount of balance to take
+     */
+    public void takeServerBalanceAsAdmin(double amount) {
+        FileConfiguration serverStatsConfig = this.main.getServerStatsConfig();
+        File serverStatsFile = new File(this.main.getDataFolder(), "serverstats.yml");
+        serverStatsConfig.set("total-tax-balance", serverStatsConfig.getInt("total-tax-balance") - amount);
+        try {
+            serverStatsConfig.save(serverStatsFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Sets the server balance as an admin.
+     *
+     * @param amount the amount of balance to set
+     */
+    public void setServerBalanceAsAdmin(double amount) {
+        FileConfiguration serverStatsConfig = this.main.getServerStatsConfig();
+        File serverStatsFile = new File(this.main.getDataFolder(), "serverstats.yml");
+        serverStatsConfig.set("total-tax-balance", amount);
+        try {
+            serverStatsConfig.save(serverStatsFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Gets the stats of a player.
      *
      * @param player the player to get stats for
