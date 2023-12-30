@@ -11,3 +11,96 @@ commands:
   quicktax:
     description: Base command for the plugin
     aliases: [qt, qtax]
+permissions:
+  quicktax.help:
+    description: View the list of commands
+    default: op
+  quicktax.pay:
+    description: Pay tax to the server
+    default: op
+  quicktax.top:
+    description: View the tax payer leaderboard
+    default: op
+  quicktax.stats:
+    description: View your own tax stats
+    default: op
+  quicktax.schedule.view.enabled:
+    description: View enabled tax collection schedules
+    default: op
+  quicktax.stats.others:
+    description: View a specific player's tax stats
+    default: op
+  quicktax.collectall:
+    description: Collect tax from all players
+    default: op
+  quicktax.collectrank:
+    description: Collect tax from players by rank
+    default: op
+  quicktax.collectbal:
+    description: Collect tax from players by balance
+    default: op
+  quicktax.collectactivity:
+    description: Collect tax from players by activity
+    default: op
+  quicktax.collectname:
+    description: Collect tax from a specific player
+    default: op
+  quicktax.server.stats:
+    description: View the server total tax stats
+    default: op
+  quicktax.server.withdraw.self:
+    description: Withdraw money to self from server tax balance
+    default: op
+  quicktax.server.withdraw.others:
+    description: Withdraw money to specific player from server tax balance
+    default: op
+  quicktax.server.admin.add:
+    description: Add money to the server tax balance
+    default: op
+  quicktax.server.admin.take:
+    description: Remove money from the server tax balance
+    default: op
+  quicktax.server.admin.set:
+    description: Set the server tax balance
+    default: op
+  quicktax.schedule.start:
+    description: Start tax collection schedules
+    default: op
+  quicktax.schedule.stop:
+    description: Stop tax collection schedules
+    default: op
+  quicktax.schedule.view.*:
+    description: View all tax collection schedules
+    default: op
+  quicktax.schedule.view.disabled:
+    description: View disabled tax collection schedules
+    default: op
+  quicktax.reload:
+    description: Reload the plugin
+    default: op
+  quicktax.sign.add:
+    description: Allow creation of leaderboard signs
+    default: op
+  quicktax.sign.remove:
+    description: Allow removal of leaderboard signs
+    default: op
+  quicktax.exempt.*:
+    description: Exempt player from all tax collections
+    default: op
+  quicktax.exempt.collectname:
+    description: Exempt player from tax collection by name
+    default: op
+  quicktax.exempt.collectall:
+    description: Exempt player from tax collection on all players
+    default: op
+  quicktax.exempt.collectrank:
+    description: Exempt player from tax collection by rank
+    default: op
+  quicktax.exempt.collectbal:
+    description: Exempt player from tax collection by balance
+    default: op
+  quicktax.exempt.collectactivity:
+    description: Exempt player from tax collection by activity
+    default: op
+
+

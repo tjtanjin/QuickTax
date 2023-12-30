@@ -2,6 +2,8 @@
 prefix: '&6[&bQuickTax&6] '
 
 # messages that support placeholders have them listed as comments on the right of the message
+# hexadeciaml color codes are also supported (e.g. #ff0000, #00ff00)
+# if you need # in your string but not as a color code, escape it with \ (e.g. \#hashtag)
 
 # general messages
 reload-success: '&aQuickTax has been reloaded!'
@@ -61,7 +63,7 @@ no-quicktax-sign-remove-permission: '&cYou do not have permission to break a lea
 # format for help command
 help-header: '&b----- &6Commands &b-----'
 help-body: |
-  &a/quicktax help &b- view a list of help options
+  &a/quicktax help &b- view the list of commands
   &a/quicktax pay <amount> &b- pay tax to the server
   &a/quicktax top &b- view tax payer leaderboard
   &a/quicktax stats &b- view your own tax stats
@@ -77,8 +79,8 @@ help-body: |
   &a/quicktax server admin add <amount> &b- add money to the server tax balance
   &a/quicktax server admin take <amount> &b- take money from the server tax balance
   &a/quicktax server admin set <amount> &b- set the server tax balance
-  &a/quicktax schedule start &b- start tax collection schedule
-  &a/quicktax schedule stop &b- stop tax collection schedule
+  &a/quicktax schedule start &b- start tax collection schedules
+  &a/quicktax schedule stop &b- stop tax collection schedules
   &a/quicktax schedule view &b- view all schedules
   &a/quicktax schedule view <name> &b- view a specific schedule
   &a/quicktax update &b- manually trigger an update for the leaderboard
