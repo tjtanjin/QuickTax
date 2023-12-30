@@ -75,6 +75,9 @@ permissions:
   quicktax.schedule.view.disabled:
     description: View disabled tax collection schedules
     default: op
+  quicktax.update:
+    description: Trigger a leaderboard update
+    default: op
   quicktax.reload:
     description: Reload the plugin
     default: op
