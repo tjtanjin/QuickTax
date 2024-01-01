@@ -333,7 +333,7 @@ public class MessageManager {
                 builder.append("&" + c);
             }
 
-            message = message.replace(hexCode, builder.toString());
+            message = message.substring(0, matcher.start()) + builder.toString() + message.substring(matcher.end());
             matcher = pattern.matcher(message);
         }
 
