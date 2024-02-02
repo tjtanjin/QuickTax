@@ -376,11 +376,12 @@ public class TaxManager {
 
         try {
             PlayerData playerData = GriefPrevention.instance.dataStore.getPlayerData(player.getUniqueId());
+            double totalClaims = playerData.getAccruedClaimBlocks() + playerData.getBonusClaimBlocks();
             double playerClaims;
             if (main.getConfig().getBoolean("active-claims-only", false)) {
-                playerClaims = playerData.getAccruedClaimBlocks() - playerData.getRemainingClaimBlocks();
+                playerClaims = totalClaims - playerData.getRemainingClaimBlocks();
             } else {
-                playerClaims = playerData.getAccruedClaimBlocks();
+                playerClaims = totalClaims;
             }
             subtractAmount = getSubtractAmountWithClaims(player, usePercentage, balTaxAmount, playerBal, claimsTaxAmount, playerClaims);
         } catch (NoClassDefFoundError e) {
@@ -403,7 +404,7 @@ public class TaxManager {
             }
             MessageManager.sendMessage(player.getPlayer(), "player-pay-tax-success",
                     new String[]{"%player%", "%amount%"},
-                    new String[]{player.getName(), String.valueOf(subtractAmount)});
+                    new String[]{player.getName(), new BigDecimal(subtractAmount).setScale(2, RoundingMode.HALF_UP).toPlainString()});
         }
 
         // needed in rare situations where async access to economy plugin is disallowed
@@ -462,7 +463,7 @@ public class TaxManager {
             }
             MessageManager.sendMessage(player.getPlayer(), "player-pay-tax-success",
                     new String[]{"%player%", "%amount%"},
-                    new String[]{player.getName(), String.valueOf(subtractAmount)});
+                    new String[]{player.getName(), new BigDecimal(subtractAmount).setScale(2, RoundingMode.HALF_UP).toPlainString()});
         }
 
         // needed in rare situations where async access to economy plugin is disallowed
