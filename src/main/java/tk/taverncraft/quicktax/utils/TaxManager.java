@@ -11,7 +11,6 @@ import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 
-import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.PlayerData;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 
