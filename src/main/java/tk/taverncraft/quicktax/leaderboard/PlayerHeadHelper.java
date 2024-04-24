@@ -76,7 +76,14 @@ public class PlayerHeadHelper {
             BlockState state = skullAboveSign.getState();
             Skull skull = (Skull) state;
             skull.setOwningPlayer(player);
-            skull.update();
+            try {
+                skull.update();
+            } catch (NullPointerException ignored) {
+                // note: exception thrown for a purpur server owner, not yet reported by others
+                // functionality is supposedly not affected, so adding this just to mute the
+                // error messages - might be worth revisiting if more people report this in future
+                // though purpur is not officially supported by this plugin so not a high priority
+            }
         }
     }
 }

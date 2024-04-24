@@ -207,5 +207,6 @@ activity-bracket:
 # %qtax_schedule_freq_{scheduleName}% - get the schedule frequency (seconds)
 # %qtax_schedule_next_run_{scheduleName}% - get the time for schedule's next run
 # %qtax_schedule_timezone_{scheduleName}% - get the schedule timezone
+# %qtax_schedule_last_collected_{scheduleName}% - get the last collected tax amount for schedule
 # %qtax_top_name_{rank}% - get the player name at specified rank
 # %qtax_top_tax_{rank}% - get the player total tax paid at specified rank

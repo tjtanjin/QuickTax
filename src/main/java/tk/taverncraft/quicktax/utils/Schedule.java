@@ -37,6 +37,7 @@ public class Schedule {
     int frequency;
     String type;
     String nextRunTime = "None";
+    double lastCollected = 0;
     boolean updateLeaderboardOnRun;
     List<String> commands;
 
@@ -151,7 +152,7 @@ public class Schedule {
         } else {
             taxManager.collectBal(Bukkit.getConsoleSender());
         }
-        this.updateNextRunTime(main);
+        this.updateScheduleInfo(main, taxManager.getTotalTaxCollected());
         this.runPostCollectionCommands(main);
         if (updateLeaderboardOnRun) {
             main.getStatsManager().manualUpdateLeaderboard(Bukkit.getConsoleSender());
@@ -161,16 +162,20 @@ public class Schedule {
     /**
      * Updates the next run time of the schedule.
      *
-     * @param main plugin class
      */
-    public void updateNextRunTime(Main main) {
+    public String calculateNextRunTime() {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.SECOND, frequency);
         Date date = cal.getTime();
         DateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy | HH:mm:ss");
         sdf.setTimeZone(TimeZone.getTimeZone(timezone));
-        this.nextRunTime = sdf.format(date);
-        this.updateScheduleTimeFile(main, this, this.nextRunTime);
+        return sdf.format(date);
+    }
+
+    public void updateScheduleInfo(Main main, double totalTaxCollected) {
+        String calculatedTime = calculateNextRunTime();
+        this.nextRunTime = calculatedTime;
+        this.saveScheduleInfoToFile(main, this, this.nextRunTime, totalTaxCollected);
     }
 
     /**
@@ -184,6 +189,24 @@ public class Schedule {
             this.nextRunTime = sdf.format(sdf.parse(scheduledTime));
         } catch (Exception e) {
             this.nextRunTime = "None";
+        }
+    }
+
+    /**
+     * Sets the last tax collected for this schedule.
+     */
+    public void populateLastCollected(Main main) {
+        File scheduleTimeFile = new File(main.getDataFolder() + "/schedules", this.getName() + ".yml");
+        if (!scheduleTimeFile.exists()) {
+            return;
+        }
+
+        FileConfiguration scheduleTimeConfig = new YamlConfiguration();
+        try {
+            scheduleTimeConfig.load(scheduleTimeFile);
+            this.lastCollected = scheduleTimeConfig.getDouble("last-collected", 0);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
         }
     }
 
@@ -228,18 +251,20 @@ public class Schedule {
     /**
      * Updates schedule time file and creates it if it does not exist.
      *
+     * @param main plugin instance
      * @param schedule schedule to update time in file for
      * @param time time for schedule's next run
+     * @param totalTaxCollected the tax collected for this schedule run
      */
-    public void updateScheduleTimeFile(Main main, Schedule schedule, String time) {
-        File scheduleTimeFile = new File(main.getDataFolder() + "/schedules", schedule.getName() + ".yml");
-        FileConfiguration scheduleTimeConfig = new YamlConfiguration();
-        if (!scheduleTimeFile.exists()) {
-            scheduleTimeFile.getParentFile().mkdirs();
+    public void saveScheduleInfoToFile(Main main, Schedule schedule, String time, double totalTaxCollected) {
+        File scheduleInfoFile = new File(main.getDataFolder() + "/schedules", schedule.getName() + ".yml");
+        FileConfiguration scheduleInfoConfig = new YamlConfiguration();
+        if (!scheduleInfoFile.exists()) {
+            scheduleInfoFile.getParentFile().mkdirs();
             String identifier = schedule.getUniqueIdentifier();
-            scheduleTimeConfig.set(identifier, time);
+            scheduleInfoConfig.set(identifier, time);
             try {
-                scheduleTimeConfig.save(scheduleTimeFile);
+                scheduleInfoConfig.save(scheduleInfoFile);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -247,8 +272,9 @@ public class Schedule {
 
         try {
             String identifier = schedule.getUniqueIdentifier();
-            scheduleTimeConfig.set(identifier, time);
-            scheduleTimeConfig.save(scheduleTimeFile);
+            scheduleInfoConfig.set(identifier, time);
+            scheduleInfoConfig.set("last-collected", totalTaxCollected);
+            scheduleInfoConfig.save(scheduleInfoFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -316,5 +342,9 @@ public class Schedule {
 
     public String getNextRunTime() {
         return this.nextRunTime;
+    }
+
+    public double getLastCollected() {
+        return this.lastCollected;
     }
 }

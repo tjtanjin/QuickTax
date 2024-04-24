@@ -71,6 +71,17 @@ public class PapiManager extends PlaceholderExpansion {
             }
         }
 
+        if (params.startsWith("schedule_last_collected_")) {
+            String[] args = params.split("_", 4);
+            String scheduleName = args[3];
+            Schedule schedule = ScheduleManager.getSchedule(scheduleName);
+            if (schedule != null) {
+                return String.valueOf(schedule.getLastCollected());
+            } else {
+                return "None";
+            }
+        }
+
         if (params.startsWith("schedule_timezone_")) {
             String[] args = params.split("_", 3);
             String scheduleName = args[2];

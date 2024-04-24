@@ -21,11 +21,12 @@ import tk.taverncraft.quicktax.Main;
  * TaxManager handles all logic and action for collecting tax from players.
  */
 public class TaxManager {
-    Main main;
-    ValidationManager validationManager;
-    double totalTaxCollected;
     public static boolean isCollecting;
     public static Runnable task;
+
+    Main main;
+    ValidationManager validationManager;
+    private double totalTaxCollected;
 
     // permission nodes for tax exemptions
     private final String exemptFullPerm = "quicktax.exempt.*";
@@ -41,6 +42,10 @@ public class TaxManager {
     public TaxManager(Main main) {
         this.main = main;
         this.validationManager = new ValidationManager(main);
+    }
+
+    public double getTotalTaxCollected() {
+        return this.totalTaxCollected;
     }
 
     /**

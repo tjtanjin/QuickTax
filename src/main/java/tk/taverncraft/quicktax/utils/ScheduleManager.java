@@ -183,6 +183,7 @@ public class ScheduleManager {
 
         for (Schedule schedule : schedules.values()) {
             if (schedule.isEnabled()) {
+                schedule.populateLastCollected(main);
                 setUpSchedule(main, schedule);
             }
         }
