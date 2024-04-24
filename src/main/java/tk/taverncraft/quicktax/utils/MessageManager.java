@@ -2,6 +2,7 @@ package tk.taverncraft.quicktax.utils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.UUID;
@@ -14,9 +15,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.util.ChatPaginator;
-
-import static org.bukkit.util.ChatPaginator.GUARANTEED_NO_WRAP_CHAT_PAGE_WIDTH;
 
 /**
  * MessageManager handles all formatting and sending of messages to the command sender.
@@ -24,7 +22,8 @@ import static org.bukkit.util.ChatPaginator.GUARANTEED_NO_WRAP_CHAT_PAGE_WIDTH;
 public class MessageManager {
     private static final HashMap<String, String> messageKeysMap = new HashMap<>();
 
-    private static String completeLeaderboard;
+    private static ArrayList<String> helpBoard;
+    private static ArrayList<String> completeLeaderboard;
 
     /**
      * Sets the messages to use.
@@ -37,6 +36,7 @@ public class MessageManager {
         for (String messageKey : messageKeysSet) {
             messageKeysMap.put(messageKey, formatMessageColor(lang.get(messageKey).toString()));
         }
+        setUpHelpBoard();
     }
 
     /**
@@ -210,29 +210,44 @@ public class MessageManager {
      * @param pageNum page number to view
      */
     public static void showHelpBoard(CommandSender sender, int pageNum) {
-        int linesPerPage = 12;
+        if (helpBoard == null) {
+            return;
+        }
+
+        int index = pageNum - 1;
+        if (pageNum > helpBoard.size()) {
+            sender.sendMessage(helpBoard.get(helpBoard.size() - 1));
+        } else {
+            sender.sendMessage(helpBoard.get(index));
+        }
+    }
+
+    public static void setUpHelpBoard() {
         int positionsPerPage = 10;
 
+        helpBoard = new ArrayList<>();
         String header = getMessage("help-header");
         String footer = messageKeysMap.get("help-footer");
         String[] messageBody = messageKeysMap.get("help-body").split("\n", -1);
-        StringBuilder message = new StringBuilder(header + "\n");
+        StringBuilder message = new StringBuilder();
         int position = 1;
         int currentPage = 1;
         for (String body : messageBody) {
+            if (position % positionsPerPage == 1) {
+                message = new StringBuilder(header + "\n");
+            }
+
             message.append(body).append("\n");
+
             if (position % positionsPerPage == 0) {
                 currentPage++;
-                message = new StringBuilder(message.append(footer).append("\n").toString().replaceAll("%page%", String.valueOf(currentPage)));
-                message.append(header).append("\n");
+                message.append(footer.replaceAll("%page%", String.valueOf(currentPage)));
+                helpBoard.add(message.toString());
             }
             position++;
         }
 
-        ChatPaginator.ChatPage page = ChatPaginator.paginate(message.toString(), pageNum, GUARANTEED_NO_WRAP_CHAT_PAGE_WIDTH, linesPerPage);
-        for (String line : page.getLines()) {
-            sender.sendMessage(line);
-        }
+        helpBoard.add(message.toString());
     }
 
     /**
@@ -247,10 +262,11 @@ public class MessageManager {
             return;
         }
 
-        int linesPerPage = 12;
-        ChatPaginator.ChatPage page = ChatPaginator.paginate(completeLeaderboard, pageNum, GUARANTEED_NO_WRAP_CHAT_PAGE_WIDTH, linesPerPage);
-        for (String line : page.getLines()) {
-            sender.sendMessage(line);
+        int index = pageNum - 1;
+        if (pageNum > completeLeaderboard.size()) {
+            sender.sendMessage(completeLeaderboard.get(completeLeaderboard.size() - 1));
+        } else {
+            sender.sendMessage(completeLeaderboard.get(index));
         }
     }
 
@@ -262,10 +278,11 @@ public class MessageManager {
     public static void setUpLeaderboard(HashMap<UUID, Double> leaderboard) {
         int positionsPerPage = 10;
 
+        completeLeaderboard = new ArrayList<>();
         String header = getMessage("leaderboard-header");
         String footer = messageKeysMap.get("leaderboard-footer");
         String messageTemplate = messageKeysMap.get("leaderboard-body");
-        StringBuilder message = new StringBuilder(header);
+        StringBuilder message = new StringBuilder();
         int position = 1;
         int currentPage = 1;
 
@@ -279,19 +296,24 @@ public class MessageManager {
             }
 
             double totalTaxPaid = entry.getValue();
-            message.append(messageTemplate);
-            message = new StringBuilder(message.toString().replaceAll("%num%", String.valueOf(position))
-                    .replaceAll("%player%", player.getName())
-                    .replaceAll("%totaltaxpaid%", new BigDecimal(totalTaxPaid).setScale(2, RoundingMode.CEILING).toPlainString()));
+
+            if (position % positionsPerPage == 1) {
+                message = new StringBuilder(header + "\n");
+            }
+
+            message.append(messageTemplate.replaceAll("%num%", String.valueOf(position))
+                .replaceAll("%player%", player.getName())
+                .replaceAll("%totaltaxpaid%", new BigDecimal(totalTaxPaid).setScale(2, RoundingMode.CEILING).toPlainString()));
+
             if (position % positionsPerPage == 0) {
                 currentPage++;
-                message = new StringBuilder(message.append(footer).toString().replaceAll("%page%", String.valueOf(currentPage)));
-                message.append(header);
+                message.append(footer.replaceAll("%page%", String.valueOf(currentPage)));
+                completeLeaderboard.add(message.toString());
             }
             position++;
         }
 
-        completeLeaderboard = message.toString();
+        completeLeaderboard.add(message.toString());
     }
 
     /**

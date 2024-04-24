@@ -41,12 +41,12 @@ public class TopCommand {
             return true;
         }
 
+        int pageNum = 1;
         try {
-            int pageNum = Integer.parseInt(args[1]);
-            MessageManager.showLeaderboard(sender, pageNum);
-        } catch (NumberFormatException | IndexOutOfBoundsException e) {
-            MessageManager.showLeaderboard(sender, 1);
+            pageNum = Integer.parseInt(args[1]);
+        } catch (NumberFormatException | IndexOutOfBoundsException ignored) {
         }
+        MessageManager.showLeaderboard(sender, pageNum);
         return true;
     }
 }
