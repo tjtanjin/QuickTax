@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -46,6 +47,10 @@ public class MessageManager {
      * @param messageKey key to get message with
      */
     public static void sendMessage(CommandSender sender, String messageKey) {
+        // if sender is command block, then nothing to send
+        if (sender instanceof BlockCommandSender) {
+            return;
+        }
         String message = getMessage(messageKey);
         sender.sendMessage(message);
     }
@@ -59,6 +64,10 @@ public class MessageManager {
      * @param values placeholder values
      */
     public static void sendMessage(CommandSender sender, String messageKey, String[] keys, String[] values) {
+        // if sender is command block, then nothing to send
+        if (sender instanceof BlockCommandSender) {
+            return;
+        }
         String message = getMessage(messageKey);
         for (int i = 0; i < keys.length; i++) {
             message = message.replaceAll(keys[i], values[i]);
