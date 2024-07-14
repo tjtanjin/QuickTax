@@ -401,8 +401,10 @@ public class TaxManager {
         if (player.isOnline()) {
             if (main.getConfig().getBoolean("enable-sound")) {
                 try {
-                    player.getPlayer().getWorld().playSound(player.getPlayer().getLocation(),
-                        Sound.valueOf(main.getConfig().getString("play-sound")), 1, 1);
+                    Bukkit.getScheduler().runTask(main, () -> {
+                        player.getPlayer().getWorld().playSound(player.getPlayer().getLocation(),
+                            Sound.valueOf(main.getConfig().getString("play-sound")), 1, 1);
+                    });
                 } catch(Exception ignored) {
                 }
             }
@@ -460,8 +462,10 @@ public class TaxManager {
         if (player.isOnline()) {
             if (main.getConfig().getBoolean("enable-sound")) {
                 try {
-                    player.getPlayer().getWorld().playSound(player.getPlayer().getLocation(),
-                        Sound.valueOf(main.getConfig().getString("play-sound")), 1, 1);
+                    Bukkit.getScheduler().runTask(main, () -> {
+                        player.getPlayer().getWorld().playSound(player.getPlayer().getLocation(),
+                            Sound.valueOf(main.getConfig().getString("play-sound")), 1, 1);
+                    });
                 } catch(Exception ignored) {
                 }
             }
