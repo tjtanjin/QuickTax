@@ -29,6 +29,7 @@ tax-collect-success-bal: '&aTaxes collected for players by balance!'
 tax-collect-success-activity: '&aTaxes collected for players by activity!'
 tax-withdraw-success: '&aBalance withdrawn successfully!'
 tax-withdraw-fail: '&cThere is insufficient server tax balance!'
+tax-withdraw-fail-invalid: '&cCannot withdraw negative or zero current from balance!'
 tax-collect-fail-individual: '&b%player% &chas no money to pay tax!' # %player%
 tax-collect-already-running: '&cAn existing tax collection is ongoing, please try again later!'
 tax-exempt: '&cThe player &b%player% &cis exempted from your tax collection!'

@@ -25,6 +25,7 @@ tax-collect-success-rank: '&a¡Impuestos Recaudados de todos los jugadores por r
 tax-collect-success-bal: '¡Impuestos Recaudados de todos los jugadores por dinero!'
 tax-withdraw-success: '&aFondos retirados de la cuenta del Servidor!'
 tax-withdraw-fail: '&cFondos insuficientes. La cuenta del Servidor no tiene ese saldo de impuestos para retirar!'
+tax-withdraw-fail-invalid: '&cNo puede retirar corriente negativa o cero del saldo!'
 tax-collect-fail-individual: '&b%player% &cno tiene dinero para pagar sus impuestos!' # %player%
 tax-collect-already-running: '&cHay una recaudación de impuestos en curso. Vuelva a intentarlo más tarde!'
 player-pay-tax-fail: '&cTienes dinero insuficiente para pagar tus impuestos!' # %player%
